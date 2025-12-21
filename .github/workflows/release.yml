@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Build Snap
+        uses: snapcore/action-build@f4e428e2ce71d3433ed32906b3e9a7e0254c4146 # v1
+        id: build
+
+      - name: Get tag version
+        id: tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8 # v2.2.0
+        with:
+          files: ${{ steps.build.outputs.snap }}
+          body: |
+            ## AWS Vault Snap v${{ steps.tag.outputs.VERSION }}
+
+            ### Installation
+            ```bash
+            sudo snap install --dangerous --classic aws-vault_${{ steps.tag.outputs.VERSION }}_amd64.snap
+            ```
+
+            ### Verification
+            ```bash
+            aws-vault --version
+            ```
+
+            ### What's Changed
+            See the [commits](${{ github.server_url }}/${{ github.repository }}/compare/${{ steps.tag.outputs.VERSION }}...HEAD) for details.
+          draft: false
+          prerelease: false

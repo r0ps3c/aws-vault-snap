@@ -1,0 +1,39 @@
+name: aws-vault
+base: core22
+adopt-info: aws-vault
+title: AWS Vault
+summary: Securely store and access AWS credentials in development environments
+description: |
+  aws-vault stores IAM credentials in your operating system's secure keystore and
+  then generates temporary credentials from those long-term keys to expose to
+  your shell and applications. It's designed to be complimentary to the AWS CLI
+  tools.
+license: MIT
+contact: https://github.com/r0ps3c/aws-vault-snap/issues
+issues: https://github.com/r0ps3c/aws-vault-snap/issues
+source-code: https://github.com/r0ps3c/aws-vault-snap
+website: https://github.com/99designs/aws-vault
+
+apps:
+  aws-vault:
+    command: bin/aws-vault
+
+grade: stable
+confinement: classic
+
+parts:
+  aws-vault:
+    plugin: go
+    source: https://github.com/ByteNess/aws-vault.git
+    source-tag: v7.8.5
+    build-snaps:
+      - go/latest/stable
+    stage-packages:
+      - ca-certificates
+    build-environment:
+      - CGO_ENABLED: "0"
+    override-build: |
+      VERSION=$(git -C ${SNAPCRAFT_PART_SRC} describe --tags --always)
+      go test ./...
+      go build -ldflags="-s -w -X main.Version=${VERSION}" -trimpath -o ${SNAPCRAFT_PART_INSTALL}/bin/aws-vault .
+      snapcraftctl set-version "$(echo ${VERSION} | sed 's/^v//')"
