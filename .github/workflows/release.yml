@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build Snap
-        uses: snapcore/action-build@f4e428e2ce71d3433ed32906b3e9a7e0254c4146 # v1
+        uses: snapcore/action-build@3bdaa03e1ba6bf59a65f84a751d943d549a54e79 # v1.3.0
         id: build
 
       - name: Get tag version
@@ -27,7 +27,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8 # v2.2.0
+        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # v2.2.0
         with:
           files: ${{ steps.build.outputs.snap }}
           body: |
