@@ -12,7 +12,7 @@ license: MIT
 contact: https://github.com/r0ps3c/aws-vault-snap/issues
 issues: https://github.com/r0ps3c/aws-vault-snap/issues
 source-code: https://github.com/r0ps3c/aws-vault-snap
-website: https://github.com/99designs/aws-vault
+website: https://github.com/ByteNess/aws-vault
 
 apps:
   aws-vault:

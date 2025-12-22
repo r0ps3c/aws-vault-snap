@@ -68,4 +68,4 @@ For full usage documentation, see the [aws-vault documentation](https://github.c
 
 ## License
 
-This snap packaging is released under the MIT License. The aws-vault software itself maintains its own license (see [upstream repository](https://github.com/99designs/aws-vault)).
+This snap packaging is released under the MIT License. The aws-vault software itself maintains its own license (see [upstream repository](https://github.com/ByteNess/aws-vault)).
