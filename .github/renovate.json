@@ -27,7 +27,8 @@
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": true
+      "separateMajorMinor": true,
+      "minimumReleaseAge": "2 days"
     },
     {
       "description": "Security updates get high priority",

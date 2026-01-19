@@ -1,4 +1,4 @@
-name: aws-vault
+name: aws-vault-roprop
 base: core22
 adopt-info: aws-vault
 title: AWS Vault
