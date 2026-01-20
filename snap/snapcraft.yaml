@@ -1,4 +1,4 @@
-name: aws-vault-roprop
+name: roprop-aws-vault
 base: core22
 adopt-info: aws-vault
 title: AWS Vault
@@ -25,7 +25,7 @@ parts:
   aws-vault:
     plugin: go
     source: https://github.com/ByteNess/aws-vault.git
-    source-tag: v7.8.5
+    source-tag: v7.8.7
     build-snaps:
       - go/latest/stable
     stage-packages:

@@ -8,12 +8,20 @@ AWS Vault stores IAM credentials in your operating system's secure keystore and 
 
 ## Installation
 
-### From Release (Recommended)
+### From Snap Store
+
+```bash
+sudo snap install roprop-aws-vault --classic
+sudo snap alias roprop-aws-vault.aws-vault aws-vault
+```
+
+### From Release
 
 Download the latest `.snap` file from the Releases page:
 
 ```bash
-sudo snap install --dangerous --classic aws-vault_*.snap
+sudo snap install --dangerous --classic roprop-aws-vault_*.snap
+sudo snap alias roprop-aws-vault.aws-vault aws-vault
 ```
 
 ### Build from Source
@@ -23,6 +31,7 @@ Quick build with Multipass:
 ```bash
 make build
 make install
+sudo snap alias roprop-aws-vault.aws-vault aws-vault
 ```
 
 See [docs/building.md](docs/building.md) for detailed build instructions.
