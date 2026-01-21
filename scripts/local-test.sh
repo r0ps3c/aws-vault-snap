@@ -2,6 +2,7 @@
 # Local testing script for aws-vault snap
 
 set -e
+SNAPNAME="roprop-aws-vault"
 
 echo "=== AWS Vault Snap Local Test ==="
 
@@ -22,14 +23,15 @@ fi
 echo -e "${GREEN}Found snap: $SNAP_FILE${NC}"
 
 # Check if already installed
-if snap list aws-vault &>/dev/null; then
-    echo -e "${YELLOW}Removing existing aws-vault snap...${NC}"
-    sudo snap remove aws-vault
+if snap list ${SNAPNAME} &>/dev/null; then
+    echo -e "${YELLOW}Removing existing ${SNAPNAME} snap...${NC}"
+    sudo snap remove ${SNAPNAME}
 fi
 
 # Install the snap
 echo -e "${GREEN}Installing snap...${NC}"
 sudo snap install --dangerous --classic "$SNAP_FILE"
+sudo snap alias ${SNAPNAME}.aws-vault aws-vault
 
 # Test version
 echo -e "${GREEN}Testing aws-vault version...${NC}"
@@ -47,4 +49,4 @@ aws-vault add --help
 
 # Success
 echo -e "${GREEN}=== All tests passed! ===${NC}"
-echo -e "${YELLOW}To remove: sudo snap remove aws-vault${NC}"
+echo -e "${YELLOW}To remove: sudo snap remove ${SNAPNAME}${NC}"

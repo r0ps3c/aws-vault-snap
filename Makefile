@@ -32,10 +32,11 @@ test:
 	fi
 	@echo "Testing snap installation..."
 	sudo snap install --dangerous --classic *.snap
+	sudo snap alias roprop-aws-vault.aws-vault aws-vault
 	@echo "Testing aws-vault command..."
 	aws-vault --version
 	@echo "Cleaning up test installation..."
-	sudo snap remove aws-vault
+	sudo snap remove roprop-aws-vault
 
 # Lint snapcraft.yaml
 lint:
@@ -48,4 +49,5 @@ install:
 		exit 1; \
 	fi
 	sudo snap install --dangerous --classic *.snap
+	sudo snap alias roprop-aws-vault.aws-vault aws-vault
 	@echo "Snap installed successfully. Run 'aws-vault --version' to verify."

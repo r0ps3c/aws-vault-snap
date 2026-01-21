@@ -35,7 +35,8 @@ jobs:
 
             ### Installation
             ```bash
-            sudo snap install --dangerous --classic aws-vault_${{ steps.tag.outputs.VERSION }}_amd64.snap
+            sudo snap install --dangerous --classic roprop-aws-vault_${{ steps.tag.outputs.VERSION }}_amd64.snap
+            sudo snap alias roprop-aws-vault.aws-vault aws-vault
             ```
 
             ### Verification
