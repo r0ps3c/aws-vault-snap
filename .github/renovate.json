@@ -8,6 +8,8 @@
   ],
   "timezone": "UTC",
   "dependencyDashboard": true,
+  "dependencyDashboardApproval": false,
+  "prCreation": "immediate",
   "labels": [
     "dependencies"
   ],
