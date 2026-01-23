@@ -10,6 +10,9 @@
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
   "prCreation": "immediate",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "platformAutomerge": true,
   "labels": [
     "dependencies"
   ],
@@ -50,9 +53,7 @@
         "pin",
         "digest"
       ],
-      "automerge": true,
-      "automergeType": "pr",
-      "automergeStrategy": "squash"
+      "automerge": true
     },
     {
       "description": "GitHub Actions updates",
@@ -61,8 +62,7 @@
       ],
       "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": true,
-      "minimumReleaseAge": "2 days"
+      "separateMajorMinor": true
     },
     {
       "description": "Security updates get high priority",
