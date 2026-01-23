@@ -20,10 +20,10 @@
       "description": "Track aws-vault upstream version in snapcraft.yaml",
       "fileMatch": ["^snap/snapcraft\\.yaml$"],
       "matchStrings": [
-        "source:\\s*https://github\\.com/(?<depName>ByteNess/aws-vault)\\.git\\s+source-tag:\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "source-tag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
+      "depNameTemplate": "ByteNess/aws-vault",
+      "datasourceTemplate": "github-releases"
     }
   ],
   "packageRules": [
