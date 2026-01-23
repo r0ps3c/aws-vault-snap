@@ -1,0 +1,144 @@
+name: Post-Merge Version Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'snap/snapcraft.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-tag:
+    name: Create Version Tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag_created: ${{ steps.create-tag.outputs.created }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0  # Need full history for tag checking
+
+      - name: Extract version from snapcraft.yaml
+        id: version
+        run: |
+          VERSION=$(grep 'source-tag:' snap/snapcraft.yaml | sed 's/.*source-tag:\s*//' | tr -d ' ')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: Check if tag exists
+        id: check-tag
+        run: |
+          if git rev-parse "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag ${{ steps.version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag ${{ steps.version.outputs.version }} does not exist"
+          fi
+
+      - name: Create and push tag
+        id: create-tag
+        if: steps.check-tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.version }}" -m "Release ${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.version }}"
+          echo "created=true" >> $GITHUB_OUTPUT
+          echo "Created and pushed tag: ${{ steps.version.outputs.version }}"
+
+  update-stable:
+    name: Update Stable Branch
+    runs-on: ubuntu-latest
+    needs: auto-tag
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Get main version
+        id: main-version
+        run: |
+          VERSION=$(grep 'source-tag:' snap/snapcraft.yaml | sed 's/.*source-tag:\s*v//' | tr -d ' ')
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          echo "full=$VERSION" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
+          echo "Main version: $VERSION (major: $MAJOR)"
+
+      - name: Get stable version
+        id: stable-version
+        run: |
+          git fetch origin stable:stable || echo "No stable branch yet"
+          if git show stable:snap/snapcraft.yaml >/dev/null 2>&1; then
+            VERSION=$(git show stable:snap/snapcraft.yaml | grep 'source-tag:' | sed 's/.*source-tag:\s*v//' | tr -d ' ')
+            MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          else
+            VERSION="0.0.0"
+            MAJOR="0"
+          fi
+          echo "full=$VERSION" >> $GITHUB_OUTPUT
+          echo "major=$MAJOR" >> $GITHUB_OUTPUT
+          echo "Stable version: $VERSION (major: $MAJOR)"
+
+      - name: Check version change type
+        id: check-change
+        run: |
+          MAIN_MAJOR="${{ steps.main-version.outputs.major }}"
+          STABLE_MAJOR="${{ steps.stable-version.outputs.major }}"
+
+          if [ "$MAIN_MAJOR" != "$STABLE_MAJOR" ]; then
+            echo "change_type=major" >> $GITHUB_OUTPUT
+            echo "Major version change: $STABLE_MAJOR -> $MAIN_MAJOR"
+          else
+            echo "change_type=minor" >> $GITHUB_OUTPUT
+            echo "Minor/patch change within major version $MAIN_MAJOR"
+          fi
+
+      - name: Auto-update stable (minor/patch)
+        if: steps.check-change.outputs.change_type == 'minor'
+        run: |
+          git checkout stable
+          git merge main --ff-only -m "chore: sync stable with main (v${{ steps.main-version.outputs.full }})"
+          git push origin stable
+          echo "Auto-updated stable branch to v${{ steps.main-version.outputs.full }}"
+
+      - name: Create PR for major version promotion
+        if: steps.check-change.outputs.change_type == 'major'
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: promote aws-vault ${{ steps.main-version.outputs.major }}.x to stable"
+          branch: promote-stable-v${{ steps.main-version.outputs.major }}
+          base: stable
+          title: "Promote aws-vault ${{ steps.main-version.outputs.major }}.x to stable"
+          body: |
+            ## Major Version Promotion
+
+            This PR promotes the stable branch to aws-vault **${{ steps.main-version.outputs.major }}.x**.
+
+            ### Version Changes
+            - Current stable: v${{ steps.stable-version.outputs.full }} (major version ${{ steps.stable-version.outputs.major }})
+            - New version: v${{ steps.main-version.outputs.full }} (major version ${{ steps.main-version.outputs.major }})
+
+            ### What happens when merged
+            - `stable` branch will be updated to match `main`
+            - Future minor/patch releases will auto-sync to stable
+
+            ### Testing Checklist
+            - [ ] Review build/test results on main branch
+            - [ ] Check [aws-vault release notes](https://github.com/99designs/aws-vault/releases) for breaking changes
+            - [ ] Test snap with new version locally
+
+            ---
+            This PR was automatically created by the post-merge workflow.
+          labels: |
+            stable-promotion
+            major-version-bump

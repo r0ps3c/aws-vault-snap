@@ -14,7 +14,24 @@
     "enabled": true,
     "labels": ["security"]
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track aws-vault upstream version in snapcraft.yaml",
+      "fileMatch": ["^snap/snapcraft\\.yaml$"],
+      "matchStrings": [
+        "source:\\s*https://github\\.com/(?<depName>ByteNess/aws-vault)\\.git\\s+source-tag:\\s*v?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ],
   "packageRules": [
+    {
+      "description": "Label aws-vault upstream updates",
+      "matchPackageNames": ["ByteNess/aws-vault"],
+      "labels": ["dependencies", "upstream", "aws-vault"]
+    },
     {
       "description": "Auto-merge minor and patch updates",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
