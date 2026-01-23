@@ -4,8 +4,7 @@
     "config:recommended",
     ":pinAllExceptPeerDependencies",
     ":semanticCommits",
-    "group:allNonMajor",
-    "schedule:weekly"
+    "group:allNonMajor"
   ],
   "timezone": "UTC",
   "dependencyDashboard": true,
