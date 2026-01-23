@@ -11,8 +11,7 @@
   "dependencyDashboard": true,
   "labels": ["dependencies"],
   "vulnerabilityAlerts": {
-    "enabled": true,
-    "labels": ["security"]
+    "enabled": false
   },
   "customManagers": [
     {
