@@ -8,7 +8,9 @@
   ],
   "timezone": "UTC",
   "dependencyDashboard": true,
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "vulnerabilityAlerts": {
     "enabled": false
   },
@@ -16,7 +18,9 @@
     {
       "customType": "regex",
       "description": "Track aws-vault upstream version in snapcraft.yaml",
-      "fileMatch": ["^snap/snapcraft\\.yaml$"],
+      "managerFilePatterns": [
+        "/^snap/snapcraft\\.yaml$/"
+      ],
       "matchStrings": [
         "source-tag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
@@ -27,19 +31,32 @@
   "packageRules": [
     {
       "description": "Label aws-vault upstream updates",
-      "matchPackageNames": ["ByteNess/aws-vault"],
-      "labels": ["dependencies", "upstream", "aws-vault"]
+      "matchPackageNames": [
+        "ByteNess/aws-vault"
+      ],
+      "labels": [
+        "dependencies",
+        "upstream",
+        "aws-vault"
+      ]
     },
     {
       "description": "Auto-merge minor and patch updates",
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash"
     },
     {
       "description": "GitHub Actions updates",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "GitHub Actions",
       "pinDigests": true,
       "separateMajorMinor": true,
@@ -47,15 +64,24 @@
     },
     {
       "description": "Security updates get high priority",
-      "matchUpdateTypes": ["security"],
-      "labels": ["security", "priority-high"],
+      "matchUpdateTypes": [
+        "security"
+      ],
+      "labels": [
+        "security",
+        "priority-high"
+      ],
       "automerge": false
     },
     {
       "description": "Major updates require manual review",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false,
-      "labels": ["major-update"]
+      "labels": [
+        "major-update"
+      ]
     }
   ]
 }
