@@ -61,7 +61,8 @@
       ],
       "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": true
+      "separateMajorMinor": true,
+      "automerge": true
     },
     {
       "description": "Security updates get high priority",
