@@ -59,16 +59,9 @@
       "matchManagers": [
         "github-actions"
       ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
       "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": true,
-      "automerge": true
+      "separateMajorMinor": true
     },
     {
       "description": "Security updates get high priority",
