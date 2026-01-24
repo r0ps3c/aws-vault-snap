@@ -10,10 +10,12 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  actions: write
+  checks: write
 
 env:
   # Log level (debug, info, warn, error, fatal)
-  LOG_LEVEL: info
+  LOG_LEVEL: debug
   # Dry run mode (true to verify without creating PRs, false to run for real)
   RENOVATE_DRY_RUN: false
   # Automatically discover repo settings

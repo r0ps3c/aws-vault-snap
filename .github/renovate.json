@@ -6,6 +6,7 @@
     ":semanticCommits"
   ],
   "timezone": "UTC",
+  "schedule": ["at any time"],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
   "prCreation": "immediate",
@@ -80,10 +81,11 @@
       "matchManagers": [
         "github-actions"
       ],
-      "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": false,
-      "automerge": true
+      "automerge": true,
+      "schedule": ["at any time"],
+      "minimumReleaseAge": "0 days",
+      "prCreation": "immediate"
     }
   ]
 }
