@@ -55,16 +55,6 @@
       "automerge": true
     },
     {
-      "description": "GitHub Actions updates",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "groupName": "GitHub Actions",
-      "pinDigests": true,
-      "separateMajorMinor": true,
-      "automerge": true
-    },
-    {
       "description": "Security updates get high priority",
       "matchUpdateTypes": [
         "security"
@@ -84,6 +74,16 @@
       "labels": [
         "major-update"
       ]
+    },
+    {
+      "description": "GitHub Actions updates - auto-merge all versions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "GitHub Actions",
+      "pinDigests": true,
+      "separateMajorMinor": false,
+      "automerge": true
     }
   ]
 }
