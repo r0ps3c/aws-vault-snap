@@ -3,8 +3,7 @@
   "extends": [
     "config:recommended",
     ":pinAllExceptPeerDependencies",
-    ":semanticCommits",
-    "group:allNonMajor"
+    ":semanticCommits"
   ],
   "timezone": "UTC",
   "dependencyDashboard": true,
@@ -60,9 +59,16 @@
       "matchManagers": [
         "github-actions"
       ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "groupName": "GitHub Actions",
       "pinDigests": true,
-      "separateMajorMinor": true
+      "separateMajorMinor": true,
+      "automerge": true
     },
     {
       "description": "Security updates get high priority",
