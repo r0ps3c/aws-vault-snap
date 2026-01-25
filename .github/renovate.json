@@ -7,7 +7,7 @@
   ],
   "timezone": "UTC",
   "schedule": ["at any time"],
-  "dependencyDashboard": true,
+  "dependencyDashboard": false,
   "dependencyDashboardApproval": false,
   "prCreation": "immediate",
   "prConcurrentLimit": 0,
