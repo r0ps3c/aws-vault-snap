@@ -25,7 +25,7 @@ parts:
   aws-vault:
     plugin: go
     source: https://github.com/ByteNess/aws-vault.git
-    source-tag: v7.8.7
+    source-tag: v7.9.2
     build-snaps:
       - go/latest/stable
     stage-packages:
