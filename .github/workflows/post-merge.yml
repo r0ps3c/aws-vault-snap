@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   auto-tag:
@@ -52,6 +53,20 @@ jobs:
           git push origin "${{ steps.version.outputs.version }}"
           echo "created=true" >> $GITHUB_OUTPUT
           echo "Created and pushed tag: ${{ steps.version.outputs.version }}"
+
+      - name: Trigger release workflow
+        # A tag pushed with the default GITHUB_TOKEN does not fire other
+        # workflows' `on: push: tags` triggers (GitHub suppresses recursive
+        # workflow runs from GITHUB_TOKEN-authored events), so dispatch
+        # release.yml explicitly instead of relying on that event.
+        if: steps.create-tag.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yml \
+            --repo "${{ github.repository }}" \
+            --ref main \
+            -f tag="${{ steps.version.outputs.version }}"
 
   update-stable:
     name: Update Stable Branch
