@@ -1,5 +1,5 @@
 name: roprop-aws-vault
-base: core22
+base: core26
 adopt-info: aws-vault
 title: AWS Vault
 summary: Securely store and access AWS credentials in development environments
@@ -25,15 +25,17 @@ parts:
   aws-vault:
     plugin: go
     source: https://github.com/ByteNess/aws-vault.git
-    source-tag: v7.8.7
+    source-tag: v7.14.0
     build-snaps:
       - go/latest/stable
     stage-packages:
       - ca-certificates
     build-environment:
+      # Classic snaps run against the host's libraries, so a cgo-linked binary
+      # would require host glibc >= core26's. Keep the build static.
       - CGO_ENABLED: "0"
     override-build: |
-      VERSION=$(git -C ${SNAPCRAFT_PART_SRC} describe --tags --always)
+      VERSION=$(git -C ${CRAFT_PART_SRC} describe --tags --always)
       go test ./...
-      go build -ldflags="-s -w -X main.Version=${VERSION}" -trimpath -o ${SNAPCRAFT_PART_INSTALL}/bin/aws-vault .
-      snapcraftctl set-version "$(echo ${VERSION} | sed 's/^v//')"
+      go build -ldflags="-s -w -X main.Version=${VERSION}" -trimpath -o ${CRAFT_PART_INSTALL}/bin/aws-vault .
+      craftctl set version="$(echo ${VERSION} | sed 's/^v//')"

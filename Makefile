@@ -21,21 +21,22 @@ clean:
 
 # Clean all including VMs
 clean-all: clean
-	multipass delete snapcraft-aws-vault || true
+	multipass list --format csv | cut -d, -f1 | grep '^snapcraft-' | xargs -r -n1 multipass delete || true
 	multipass purge || true
 
 # Test the built snap
 test:
-	@if [ ! -f *.snap ]; then \
+	@SNAP=$$(ls -t *.snap 2>/dev/null | head -n1); \
+	if [ -z "$$SNAP" ]; then \
 		echo "No snap file found. Run 'make build' first."; \
 		exit 1; \
-	fi
-	@echo "Testing snap installation..."
-	sudo snap install --dangerous --classic *.snap
-	sudo snap alias roprop-aws-vault.aws-vault aws-vault
-	@echo "Testing aws-vault command..."
-	aws-vault --version
-	@echo "Cleaning up test installation..."
+	fi; \
+	echo "Testing snap installation..."; \
+	sudo snap install --dangerous --classic "$$SNAP"; \
+	sudo snap alias roprop-aws-vault.aws-vault aws-vault; \
+	echo "Testing aws-vault command..."; \
+	aws-vault --version; \
+	echo "Cleaning up test installation..."; \
 	sudo snap remove roprop-aws-vault
 
 # Lint snapcraft.yaml
@@ -44,10 +45,11 @@ lint:
 
 # Install the snap
 install:
-	@if [ ! -f *.snap ]; then \
+	@SNAP=$$(ls -t *.snap 2>/dev/null | head -n1); \
+	if [ -z "$$SNAP" ]; then \
 		echo "No snap file found. Run 'make build' first."; \
 		exit 1; \
-	fi
-	sudo snap install --dangerous --classic *.snap
-	sudo snap alias roprop-aws-vault.aws-vault aws-vault
-	@echo "Snap installed successfully. Run 'aws-vault --version' to verify."
+	fi; \
+	sudo snap install --dangerous --classic "$$SNAP"; \
+	sudo snap alias roprop-aws-vault.aws-vault aws-vault; \
+	echo "Snap installed successfully. Run 'aws-vault --version' to verify."

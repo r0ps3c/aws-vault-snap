@@ -134,7 +134,7 @@ jobs:
 
             ### Testing Checklist
             - [ ] Review build/test results on main branch
-            - [ ] Check [aws-vault release notes](https://github.com/99designs/aws-vault/releases) for breaking changes
+            - [ ] Check [aws-vault release notes](https://github.com/ByteNess/aws-vault/releases) for breaking changes
             - [ ] Test snap with new version locally
 
             ---
