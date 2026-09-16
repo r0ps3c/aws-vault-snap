@@ -35,11 +35,16 @@ jobs:
           if [ -z "$TAG" ]; then
             TAG="${GITHUB_REF#refs/tags/}"
           fi
+          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
           echo "VERSION=${TAG#v}" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
+          # softprops/action-gh-release infers the tag from GITHUB_REF only on
+          # a tag-push trigger; workflow_dispatch runs against a branch ref,
+          # so the tag must be given explicitly here.
+          tag_name: ${{ steps.tag.outputs.TAG }}
           files: ${{ steps.build.outputs.snap }}
           body: |
             ## AWS Vault Snap v${{ steps.tag.outputs.VERSION }}
@@ -56,6 +61,6 @@ jobs:
             ```
 
             ### What's Changed
-            See the [commits](${{ github.server_url }}/${{ github.repository }}/compare/${{ steps.tag.outputs.VERSION }}...HEAD) for details.
+            See the [commits](${{ github.server_url }}/${{ github.repository }}/compare/${{ steps.tag.outputs.TAG }}...HEAD) for details.
           draft: false
           prerelease: false
